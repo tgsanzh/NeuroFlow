@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 import { QuestionBlock } from "@/components/question-block";
 import { AccessibilityPanel } from "@/components/accessibility-panel";
@@ -9,7 +9,7 @@ import { cardThemeClass, readingTextClass } from "@/lib/accessibility";
 import { loadSession, updateSession } from "@/lib/storage";
 import type { SessionState } from "@/lib/types";
 
-export default function SectionTestPage(): JSX.Element {
+function SectionTestPageContent(): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [session, setSession] = useState<SessionState | null>(null);
@@ -40,7 +40,7 @@ export default function SectionTestPage(): JSX.Element {
     return session.content.sections[sectionIndex];
   }, [session, sectionIndex]);
 
-  if (!session || sectionIndex === null || !section) {
+  if (!session || !session.content || sectionIndex === null || !section) {
     return (
       <div className="rounded-2xl border border-calm-200 bg-white p-6 text-sm text-calm-700">
         Загружаем мини-тест...
@@ -48,6 +48,7 @@ export default function SectionTestPage(): JSX.Element {
     );
   }
 
+  const content = session.content;
   const existingState = session.sectionTests[String(sectionIndex)];
   const answers =
     existingState?.answers && existingState.answers.length === section.mini_test.length
@@ -121,7 +122,7 @@ export default function SectionTestPage(): JSX.Element {
 
   const allAnswered = answers.every((value) => value >= 0);
   const score = existingState?.score ?? 0;
-  const isLastSection = sectionIndex === session.content.sections.length - 1;
+  const isLastSection = sectionIndex === content.sections.length - 1;
 
   const handleContinue = () => {
     if (isLastSection) {
@@ -202,5 +203,19 @@ export default function SectionTestPage(): JSX.Element {
         )}
       </section>
     </div>
+  );
+}
+
+export default function SectionTestPage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <div className="rounded-2xl border border-calm-200 bg-white p-6 text-sm text-calm-700">
+          Загружаем мини-тест...
+        </div>
+      }
+    >
+      <SectionTestPageContent />
+    </Suspense>
   );
 }

@@ -6,7 +6,7 @@ export default function HomePage(): JSX.Element {
       <section className="rounded-3xl border border-calm-200 bg-white p-8 shadow-soft">
         <p className="text-sm font-semibold uppercase tracking-wide text-calm-600">NeuroFlow Demo</p>
         <h1 className="mt-3 text-3xl font-bold text-calm-900 sm:text-4xl">
-          Скан страницы -> Focus Reader -> Мини-тесты -> Финальный тест
+          Скан страницы -&gt; Focus Reader -&gt; Мини-тесты -&gt; Финальный тест
         </h1>
         <p className="mt-4 max-w-2xl text-base leading-7 text-calm-700">
           Демонстрационное приложение без логина. Контент и тесты загружаются из локального demo JSON.
