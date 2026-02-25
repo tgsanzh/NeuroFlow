@@ -117,8 +117,9 @@ export default function FinalTestPage(): JSX.Element {
     );
   }
 
+  const content = session.content;
   const score = session.finalTest?.score ?? 0;
-  const total = session.content.final_test.length;
+  const total = content.final_test.length;
   const allAnswered = answers.every((value) => value >= 0);
   const textClassName = readingTextClass(session);
 
@@ -132,7 +133,7 @@ export default function FinalTestPage(): JSX.Element {
       mode: session.mode,
       score,
       total,
-      title: session.content.overall_title
+      title: content.overall_title
     });
     setSaved(true);
   };
